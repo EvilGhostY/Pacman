@@ -479,6 +479,33 @@ def foodHeuristic(state, problem):
     lit=copy.deepcopy(foodGrid.asList())
     
     def minhCost(lt,stp,dcost):
+        hcost=99999
+        for (x,y) in lt:
+            nstp=(x,y)
+            nlt=copy.deepcopy(lt)
+            nlt.remove(nstp)
+            lst=copy.deepcopy(nlt)
+            ndcost=dcost+manhattanDistance(stp,nstp)
+            for food in lst:
+                hC=99999
+                for (x,y) in nlt:
+                    if foodGrid[x][y] and hC > manhattanDistance(nstp,(x,y)):
+                        hC =  manhattanDistance(nstp,(x,y))
+                        pup=(x,y)
+                nstp=pup
+                nlt.remove(nstp)
+                if (hC!=99999):
+                    ndcost += hC
+            if(ndcost<hcost):
+                hcost=ndcost
+        if(hcost==99999):
+            hcost=0
+        return hcost
+            
+    hCost=minhCost(lit,pt,0)
+        
+    """
+    def minhCost(lt,stp,dcost):
         if(len(lt)>0):
             hcost=99999
             for (x,y) in lt:
@@ -491,9 +518,9 @@ def foodHeuristic(state, problem):
             return hcost
         else:
             return dcost
-        
+            
     if(len(foodGrid.asList())<6):
-        hCost=minhCost(lit,pt,0)
+        hCost=minhCost(lit,pt,0,len(foodGrid.asList()))
     else:
         for food in foodGrid.asList():
             hC=99999
@@ -506,7 +533,7 @@ def foodHeuristic(state, problem):
             if (hC!=99999):
                 hCost += hC
     
-    """"
+    """"""
     for (x,y) in foodGrid.asList():
         if hCost < manhattanDistance(position,(x,y)):
             hCost =  manhattanDistance(position,(x,y))
